@@ -6,7 +6,7 @@
   align-items:center;
   justify-content:center;
 }
-.login > .row {width:1220px;}
+/* .login > .row {width:1220px;} */
 .login .card {
   width:1220px;
   height:592px;
@@ -53,7 +53,7 @@
   border-radius:0 24px 24px 0;
   text-align:right;
 }
-.login .img-right .img2 {position: absolute; top:-3rem; right:-3rem; bottom:-2rem; z-index:1;}
+/* .login .img-right .img2 {position: absolute; top:-3rem; right:-3rem; bottom:-2rem; z-index:1;} */
 .login .img-right .img2 img {width:100%;}
 
 .login .form-check label {
