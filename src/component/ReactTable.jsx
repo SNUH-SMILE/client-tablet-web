@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import useAdmissionDetail from "../Utils/useAdmissionDetail";
 import {click} from "@testing-library/user-event/dist/click";
+import useDoubleTap from "../Utils/UseDoubleTap";
 
 const RedSpan = styled.span`
   color:#ff2020;
@@ -19,6 +20,9 @@ function ReactTable({ customTableStyle='',tableHeader, tableBody, sorted, edited
     const {onMove} = useAdmissionDetail()
     // Table Body
     const data = React.useMemo(() => tableBody, [tableBody])
+    const {onClick} = useDoubleTap((e, row) => {
+        onMove(row.original.admissionId);
+    }, 300)
 
     const {
         //공통
@@ -351,9 +355,13 @@ function ReactTable({ customTableStyle='',tableHeader, tableBody, sorted, edited
                                     :
                                     <tr {...row.getRowProps()} onClick={trOnclick ? (e)=>
                                     {
+                                        onClick(e, row)
                                         trOnclick(row.cells[0].value,row.original);
                                         highlighter(e,row.cells[0].value);
-                                    }: (e)=>highlighter(e,row.cells[0].value)}
+                                    }: (e)=>{
+                                        onClick(e, row)
+                                        highlighter(e,row.cells[0].value)
+                                    }}
                                     onDoubleClick={trDbOnclicke ? (e)=>{
                                         onMove(row.original.admissionId);
                                     }:null}
