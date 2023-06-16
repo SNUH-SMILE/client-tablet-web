@@ -7,6 +7,7 @@ import styled from "styled-components";
 import useAdmissionDetail from "../Utils/useAdmissionDetail";
 import {click} from "@testing-library/user-event/dist/click";
 import useDoubleTap from "../Utils/UseDoubleTap";
+import { useNavigate } from "react-router-dom";
 
 const RedSpan = styled.span`
   color:#ff2020;
@@ -17,11 +18,20 @@ const BlueSpan = styled.span`
 function ReactTable({ customTableStyle='',tableHeader, tableBody, sorted, edited, pagination, trOnclick, trDbOnclicke, deleteRow ,targetSelectData, primaryKey, crud }) {
     // Table Header
     const columns = React.useMemo(() => tableHeader, [tableHeader])
-    const {onMove} = useAdmissionDetail()
+    // const {onMove} = useAdmissionDetail()
+    const navigate = useNavigate();
+    const onMove = (id)=>{
+        debugger;
+        localStorage.setItem('admissionId',id);
+        if (id === 'undefined') {
+        }else{
+            navigate('/stretcher/detail/'+id)
+        }
+    }
     // Table Body
     const data = React.useMemo(() => tableBody, [tableBody])
-    const {onClick} = useDoubleTap((e, row) => {
-        onMove(row.original.admissionId);
+    const {onClick} = useDoubleTap((e, id) => {
+        onMove(id);
     }, 300)
 
     const {
@@ -355,11 +365,11 @@ function ReactTable({ customTableStyle='',tableHeader, tableBody, sorted, edited
                                     :
                                     <tr {...row.getRowProps()} onClick={trOnclick ? (e)=>
                                     {
-                                        onClick(e, row)
+                                        onClick(e, row.original.admissionId)
                                         trOnclick(row.cells[0].value,row.original);
                                         highlighter(e,row.cells[0].value);
                                     }: (e)=>{
-                                        onClick(e, row)
+                                        onClick(e, row.original.admissionId)
                                         highlighter(e,row.cells[0].value)
                                     }}
                                     onDoubleClick={trDbOnclicke ? (e)=>{

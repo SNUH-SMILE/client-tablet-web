@@ -93,8 +93,8 @@ function App() {
                     <Route exact path={'/dashboard/center'} element={<CenterAdmissionBoard/>}/>
                     <Route exact path={'/dashboard/quarantine'} element={<QuarantinePatientDashboard/>}/>
                     <Route exact path={'/admission/detail'} element={<AdmissionDetail/>}/>
-                    <Route exact path={'/stretcher/list'} element={<StretcherList/>}/>
-                    <Route exact path={'/stretcher/detail/:id'} element={<AdmissionDetail/>}/>
+                    <Route exact path={'/stretcher/list'} element={<StretcherList />}></Route>
+                    <Route exact path={'/stretcher/detail/:id'} element={<AdmissionDetail/>}/>    
                 </Route>
                 <Route exact path={'/videoPopup'} element={<VideoPopup/>}/>
                 <Route exact path={'*'} element={<Error404/>}/>
