@@ -430,7 +430,7 @@ function ReactTable({ customTableStyle='',tableHeader, tableBody, sorted, edited
                                                         </td>
                                                     )
                                                 }
-                                                else if(cell.column.editElement === 'AdmissionButton'){
+                                                else if(cell.column.editElement === 'AdmissionButton' || cell.column.id === 'qantnStatus'){
                                                     return (
                                                         <td className={cell.column.styleClassName} {...cell.getCellProps()}>
                                                             {/*<button type="button" className={cell.value === '1'? "btn btn-exit" : "btn btn-exit-done"} onClick={row.original}>{cell.value === '1' ? '재원중' : '퇴실'}</button>*/}
