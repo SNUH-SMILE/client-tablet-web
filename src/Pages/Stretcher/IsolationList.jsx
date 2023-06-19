@@ -13,7 +13,7 @@ export default function AddmissionList({
   const [paginationObj, setPaginationObj] = useState({
     currentPageNo: 1,
     pageSize: 10,
-    recordCountPerPage: 15,
+    recordCountPerPage: 10,
   });
   const [totalPageCount, setTotalPageCount] = useState(null);
   const [isolationTableData, setIsolationTableData] = useState([]);
@@ -133,7 +133,7 @@ export default function AddmissionList({
         setPaginationObj({
           currentPageNo: 1,
           pageSize: 10,
-          recordCountPerPage: 15,
+          recordCountPerPage: 10,
         });
       }
     }
@@ -144,7 +144,7 @@ export default function AddmissionList({
         setPaginationObj({
           currentPageNo: 1,
           pageSize: 10,
-          recordCountPerPage: 15,
+          recordCountPerPage: 10,
         });
       }
     }
@@ -160,9 +160,9 @@ export default function AddmissionList({
                   <div className="table-header">
                     <form>
                       <div className="d-flex">
-                        <div className="tbl_title">자택격리 환자 리스트</div>
+                        {/* <div className="tbl_title"></div> */}
                         <div className="me-3 d-flex">
-                          <span className="stit">목록타입</span>
+                          {/* <span className="stit">목록타입</span> */}
                           <div style={{ alignSelf: "center" }}>
                             <input
                               className="form-check-input"
@@ -174,7 +174,7 @@ export default function AddmissionList({
                               onClick={(e) => setType(e.target.value)}
                             />
                             <label
-                              className="form-check-label"
+                              className="form-check-label px-1"
                               htmlFor="isolation-type"
                             >
                               자가격리자
@@ -190,7 +190,7 @@ export default function AddmissionList({
                               onClick={(e) => setType(e.target.value)}
                             />
                             <label
-                              className="form-check-label"
+                              className="form-check-label ps-1"
                               htmlFor="adimission-type"
                             >
                               생활치료센터
@@ -300,16 +300,16 @@ export default function AddmissionList({
                   </div>
                 </div>
               </div>
+              {/*페이징 start*/}
+              <Pagination
+                paginationObj={paginationObj}
+                totalPageCount={totalPageCount}
+                handledList={setPaginationObj}
+              />
+              {/*페이징 end*/}
             </div>
           </div>
         </div>
-        {/*페이징 start*/}
-        <Pagination
-          paginationObj={paginationObj}
-          totalPageCount={totalPageCount}
-          handledList={setPaginationObj}
-        />
-        {/*페이징 end*/}
       </main>
     </>
   );

@@ -26,7 +26,7 @@ function AdmissionList({
   const [paginationObj, setPaginationObj] = useState({
     currentPageNo: 1,
     pageSize: 10,
-    recordCountPerPage: 15,
+    recordCountPerPage: 10,
   });
   useEffect(() => {
     mountSelectAdmissionListByCenter();
@@ -100,7 +100,7 @@ function AdmissionList({
       setPaginationObj({
         currentPageNo: 1,
         pageSize: 10,
-        recordCountPerPage: 15,
+        recordCountPerPage: 10,
       });
     }
   };
@@ -137,7 +137,7 @@ function AdmissionList({
         setPaginationObj({
           currentPageNo: 1,
           pageSize: 10,
-          recordCountPerPage: 15,
+          recordCountPerPage: 10,
         });
       }
     }
@@ -213,11 +213,9 @@ function AdmissionList({
                   <div className="table-header">
                     <form>
                       <div className="d-flex">
-                        <div className="tbl_title">
-                          생활치료센터 환자 리스트
-                        </div>
+                        {/* <div className="tbl_title"></div> */}
                         <div className="me-3 d-flex">
-                          <span className="stit">목록타입</span>
+                          {/* <span className="stit">목록타입</span> */}
                           <div style={{ alignSelf: "center" }}>
                             <input
                               className="form-check-input"
@@ -229,7 +227,7 @@ function AdmissionList({
                               onClick={(e) => setType(e.target.value)}
                             />
                             <label
-                              className="form-check-label"
+                              className="form-check-label px-1"
                               htmlFor="isolation-type"
                             >
                               자가격리자
@@ -245,7 +243,7 @@ function AdmissionList({
                               onClick={(e) => setType(e.target.value)}
                             />
                             <label
-                              className="form-check-label"
+                              className="form-check-label ps-1"
                               htmlFor="adimission-type"
                             >
                               생활치료센터
@@ -337,17 +335,16 @@ function AdmissionList({
                   </div>
                 </div>
               </div>
+              {/*페이징 start*/}
+              <Pagination
+                paginationObj={paginationObj}
+                totalPageCount={totalPageCount}
+                handledList={setPaginationObj}
+              />
+              {/*페이징 end*/}
             </div>
           </div>
         </div>
-
-        {/*페이징 start*/}
-        <Pagination
-          paginationObj={paginationObj}
-          totalPageCount={totalPageCount}
-          handledList={setPaginationObj}
-        />
-        {/*페이징 end*/}
       </main>
     </>
   );
