@@ -5,12 +5,24 @@ import IsolationApi from "../../Apis/IsolationApi";
 import UseSetPageTitle from "../../Utils/UseSetPageTitle";
 import IsolationList from "./IsolationList";
 import AddmissionList from "./AdmissionList";
+import { useLocation } from "react-router-dom";
 
 function StretcherList() {
   UseSetPageTitle("격리자 리스트");
+  const location = useLocation();
   const searchPatientId = useRef("");
   const searchPatientNm = useRef("");
-  const [type, setType] = useState("isolation");
+
+  const [type, setType] = useState("");
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    if (params.get("type")) {
+      setType(params.get("type"));
+    } else {
+      setType("isolation");
+    }
+  }, []);
   return (
     <>
       {type === "isolation" && (

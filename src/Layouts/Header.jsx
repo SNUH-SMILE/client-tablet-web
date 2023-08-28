@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import { TitleContext } from "../Providers/TitleContext";
 import AuthenticationApi from "../Apis/AuthenticationApi";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAlert from "../Utils/UseAlert";
 import Dashboard from "./Headers/Dashboard";
 import Common from "../Utils/common";
@@ -13,6 +13,9 @@ function Header({ wrapper, interval, setHide }) {
 
   // 로그아웃시 로그인 페이지로 이동하기 위해 선언
   const navigate = useNavigate();
+  const location = useLocation();
+
+  
 
   // 로그아웃
   const handledLogOut = useCallback(async () => {
@@ -36,6 +39,7 @@ function Header({ wrapper, interval, setHide }) {
   const handledSideBar = useCallback(() => {
     wrapper.current.classList.toggle("toggled");
   }, []);
+
   return (
     <nav
       className={
@@ -46,7 +50,7 @@ function Header({ wrapper, interval, setHide }) {
           : "page-head dashboard_head"
       }
     >
-      <button type="button" id="prev-button" onClick={() => navigate(-1)} />
+      {(location.pathname.includes('/stretcher/list') ? null : (<button type="button" id="prev-button" onClick={() => navigate(-1)} />))}
       <h2
         className="page-title"
         style={{ margin: "0 0 0 25px" }}

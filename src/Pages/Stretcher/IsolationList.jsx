@@ -2,13 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import Pagination from "../../component/Pagination";
 import ReactTable from "../../component/ReactTable";
 import IsolationApi from "../../Apis/IsolationApi";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function AddmissionList({
+export default function IsolationList({
   searchPatientId,
   searchPatientNm,
   type,
   setType,
 }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const searchPatientIsolation = useRef();
   const [paginationObj, setPaginationObj] = useState({
     currentPageNo: 1,
@@ -37,8 +40,59 @@ export default function AddmissionList({
   }, [sortedOrder, paginationObj.currentPageNo]);
 
   useEffect(() => {
-    setActiveStatus("1");
+    // console.log({ ...isolationApi });
+    const search = location.search.substring(1);
+    if (search) {
+      const jsonStr =
+        '{"' +
+        decodeURI(search)
+          .replace(/"/g, '\\"')
+          .replace(/&/g, '","')
+          .replace(/=/g, '":"') +
+        '"}';
+      const params = JSON.parse(jsonStr);
+      // console.log(search);
+      // console.log(jsonStr);
+      const {
+        activeStatus,
+        currentPageNo,
+        orderBy,
+        orderDir,
+        pageSize,
+        patientId,
+        patientNm,
+        qantnStatus,
+        recordCountPerPage,
+      } = params;
+
+      if (patientId) searchPatientId.current.value = patientId;
+      if (patientNm) searchPatientNm.current.value = patientNm;
+      if (qantnStatus) searchPatientIsolation.current.value = qantnStatus;
+      if (activeStatus) setActiveStatus(activeStatus || "1");
+      if (orderBy && orderDir) setSortedOrder({ By: orderBy, Dir: orderDir });
+      if (currentPageNo && pageSize && recordCountPerPage) {
+        setPaginationObj({
+          currentPageNo: parseInt(currentPageNo) ? parseInt(currentPageNo) : 1,
+          pageSize: parseInt(pageSize) ? parseInt(pageSize) : 10,
+          recordCountPerPage: parseInt(recordCountPerPage)
+            ? parseInt(recordCountPerPage)
+            : 10,
+        });
+      }
+      setTimeout(() => {
+        getIsolationList();
+      }, 100);
+    } else {
+      setActiveStatus("1");
+    }
   }, []);
+
+  const onClickType = (e) => {
+    navigate(``, {
+      replace: true,
+    });
+    setType(e.target.value);
+  };
 
   const setPaginationAndAdmissionTableData = (data) => {
     setPaginationObj((prevState) => ({
@@ -59,6 +113,22 @@ export default function AddmissionList({
 
   // 자가격리자 리스트 조회
   const getIsolationList = (activeStatus) => {
+    const searchParam = {
+      type: type,
+      patientId: searchPatientId.current.value,
+      patientNm: searchPatientNm.current.value,
+      qantnStatus: searchPatientIsolation.current.value,
+      activeStatus:
+        activeStatus != null ? activeStatus : isolationApi.activeStatus,
+      currentPageNo: isolationApi.currentPageNo,
+      recordCountPerPage: isolationApi.recordCountPerPage,
+      pageSize: isolationApi.pageSize,
+      orderBy: isolationApi.sortedOrderBy,
+      orderDir: isolationApi.sortedOrderDir,
+    };
+    navigate(`?${new URLSearchParams(searchParam).toString()}`, {
+      replace: true,
+    });
     isolationApi.select(activeStatus).then(({ data }) => {
       selectedIsolationId.current = "";
       setPaginationAndAdmissionTableData(data);
@@ -139,7 +209,7 @@ export default function AddmissionList({
     }
     if (e.target.tagName === "INPUT") {
       if (paginationObj.currentPageNo === 1) {
-        getIsolationList(e.target.value);
+        getIsolationList();
       } else {
         setPaginationObj({
           currentPageNo: 1,
@@ -171,7 +241,7 @@ export default function AddmissionList({
                               id="isolation-type"
                               defaultChecked={type === "isolation"}
                               value="isolation"
-                              onClick={(e) => setType(e.target.value)}
+                              onClick={onClickType}
                             />
                             <label
                               className="form-check-label px-1"
@@ -179,7 +249,7 @@ export default function AddmissionList({
                             >
                               자가격리자
                             </label>
-
+                            <br />
                             <input
                               className="form-check-input"
                               type="radio"
@@ -187,7 +257,7 @@ export default function AddmissionList({
                               id="adimission-type"
                               defaultChecked={type === "admission"}
                               value="admission"
-                              onClick={(e) => setType(e.target.value)}
+                              onClick={onClickType}
                             />
                             <label
                               className="form-check-label ps-1"
@@ -221,7 +291,7 @@ export default function AddmissionList({
                           <span className="stit">격리상태</span>
                           <select
                             className="form-select"
-                            defaultValue={"1"}
+                            // defaultValue={"1"}
                             ref={searchPatientIsolation}
                             onChange={(e) => handledOnSearch(e)}
                           >
@@ -252,7 +322,7 @@ export default function AddmissionList({
                             >
                               ACTIVE
                             </label>
-
+                            <br />
                             <input
                               className="form-check-input"
                               type="radio"
@@ -300,14 +370,15 @@ export default function AddmissionList({
                   </div>
                 </div>
               </div>
-              {/*페이징 start*/}
-              <Pagination
-                paginationObj={paginationObj}
-                totalPageCount={totalPageCount}
-                handledList={setPaginationObj}
-              />
-              {/*페이징 end*/}
             </div>
+            <br />
+            {/*페이징 start*/}
+            <Pagination
+              paginationObj={paginationObj}
+              totalPageCount={totalPageCount}
+              handledList={setPaginationObj}
+            />
+            {/*페이징 end*/}
           </div>
         </div>
       </main>

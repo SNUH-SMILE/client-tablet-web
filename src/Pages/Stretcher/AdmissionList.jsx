@@ -3,6 +3,7 @@ import ReactTable from "../../component/ReactTable";
 import Pagination from "../../component/Pagination";
 import AdmissionApi from "../../Apis/AdmissionApi";
 import { getLonginUserInfo } from "../../Apis/CommonCode";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function AdmissionList({
   searchAdmissionId,
@@ -11,7 +12,8 @@ function AdmissionList({
   setType,
 }) {
   // UseSetPageTitle("생활치료센터 리스트");
-
+  const location = useLocation();
+  const navigate = useNavigate();
   // 검색
   const searchAdmissionCenter = useRef();
   const searchAdmissionState = useRef();
@@ -33,8 +35,49 @@ function AdmissionList({
   }, [sortedOrder, paginationObj.currentPageNo]);
 
   useEffect(() => {
-    setActiveStatus("1");
-  });
+    const search = location.search.substring(1);
+    if (search) {
+      const jsonStr =
+        '{"' +
+        decodeURI(search)
+          .replace(/"/g, '\\"')
+          .replace(/&/g, '","')
+          .replace(/=/g, '":"') +
+        '"}';
+      const params = JSON.parse(jsonStr);
+      // console.log(search);
+      // console.log(jsonStr);
+      const {
+        centerId,
+        patientId,
+        patientNm,
+        qantnStatus,
+        activeStatus,
+        currentPageNo,
+        recordCountPerPage,
+        pageSize,
+        orderBy,
+        orderDir,
+      } = params;
+      if (centerId) searchAdmissionCenter.current.value = centerId;
+      if (patientId) searchAdmissionId.current.value = patientId;
+      if (patientNm) searchAdmissionNm.current.value = patientNm;
+      if (qantnStatus) searchAdmissionState.current.value = qantnStatus;
+      if (activeStatus) setActiveStatus(activeStatus || "1");
+      if (orderBy && orderDir) setSortedOrder({ By: orderBy, Dir: orderDir });
+      if (currentPageNo && pageSize && recordCountPerPage) {
+        setPaginationObj({
+          currentPageNo: parseInt(currentPageNo) ? parseInt(currentPageNo) : 1,
+          pageSize: parseInt(pageSize) ? parseInt(pageSize) : 10,
+          recordCountPerPage: parseInt(recordCountPerPage)
+            ? parseInt(recordCountPerPage)
+            : 10,
+        });
+      }
+    } else {
+      setActiveStatus("1");
+    }
+  }, []);
   // 입소자관련 Api
   const admissionApi = new AdmissionApi(
     searchAdmissionCenter,
@@ -81,6 +124,22 @@ function AdmissionList({
       .catch(() => console.log("ERROR getLonginUserInfo"))
       .then(() => {
         if (searchAdmissionCenter.current.value) {
+          const searchParam = {
+            type,
+            centerId: searchAdmissionCenter.current.value,
+            patientId: searchAdmissionId.current.value,
+            patientNm: searchAdmissionNm.current.value,
+            qantnStatus: searchAdmissionState.current.value,
+            activeStatus: admissionApi.activeStatus,
+            currentPageNo: admissionApi.currentPageNo,
+            recordCountPerPage: admissionApi.recordCountPerPage,
+            pageSize: admissionApi.pageSize,
+            orderBy: admissionApi.sortedOrderBy,
+            orderDir: admissionApi.sortedOrderDir,
+          };
+          navigate(`?${new URLSearchParams(searchParam).toString()}`, {
+            replace: true,
+          });
           admissionApi.select().then(({ data }) => {
             setPaginationAndAdmissionTableDat(data);
             selectedAdmissionId.current = "";
@@ -89,6 +148,22 @@ function AdmissionList({
       });
   };
   const selectAdmissionListByCenter = () => {
+    const searchParam = {
+      type,
+      centerId: searchAdmissionCenter.current.value,
+      patientId: searchAdmissionId.current.value,
+      patientNm: searchAdmissionNm.current.value,
+      qantnStatus: searchAdmissionState.current.value,
+      activeStatus: admissionApi.activeStatus,
+      currentPageNo: admissionApi.currentPageNo,
+      recordCountPerPage: admissionApi.recordCountPerPage,
+      pageSize: admissionApi.pageSize,
+      orderBy: admissionApi.sortedOrderBy,
+      orderDir: admissionApi.sortedOrderDir,
+    };
+    navigate(`?${new URLSearchParams(searchParam).toString()}`, {
+      replace: true,
+    });
     if (searchAdmissionCenter.current.value) {
       admissionApi.select().then(({ data }) => {
         selectedAdmissionId.current = "";
@@ -232,7 +307,7 @@ function AdmissionList({
                             >
                               자가격리자
                             </label>
-
+                            <br />
                             <input
                               className="form-check-input"
                               type="radio"
@@ -297,7 +372,7 @@ function AdmissionList({
                           <span className="stit">재원상태</span>
                           <select
                             className="form-select"
-                            defaultValue={""}
+                            // defaultValue={""}
                             ref={searchAdmissionState}
                             onChange={(e) => handledOnSearch(e)}
                           >
@@ -335,14 +410,15 @@ function AdmissionList({
                   </div>
                 </div>
               </div>
-              {/*페이징 start*/}
-              <Pagination
-                paginationObj={paginationObj}
-                totalPageCount={totalPageCount}
-                handledList={setPaginationObj}
-              />
-              {/*페이징 end*/}
             </div>
+            <br />
+            {/*페이징 start*/}
+            <Pagination
+              paginationObj={paginationObj}
+              totalPageCount={totalPageCount}
+              handledList={setPaginationObj}
+            />
+            {/*페이징 end*/}
           </div>
         </div>
       </main>

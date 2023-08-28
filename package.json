@@ -27,10 +27,9 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": [
@@ -52,10 +51,12 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
+    "@craco/craco": "^7.1.0",
     "apexcharts": "^3.35.3",
     "dotenv-cli": "^5.1.0",
     "eslint": "^8.26.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-jsx-a11y": "^6.6.1"
-  }
+  },
+  "proxy": "https://smile.hconnect.co.kr"
 }

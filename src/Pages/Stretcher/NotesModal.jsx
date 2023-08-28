@@ -93,6 +93,17 @@ export default function NotesModal({ show, handledClose }) {
     }
   }, [tabIndex]);
 
+  useEffect(() => {
+    admissionDetailApi.select().then(({ data }) => {
+      // setDashBoardData(data.result.headerVO);
+      // setNoticeList(data.result.noticeVOList);
+      setRecordList(data.result.recordVOList);
+      //  console.log(data);
+    });
+    getDrugList();
+    getInterviewList();
+  }, [])
+
   return (
     <Modal show={show} onHide={handledClose} size="xl">
       <Modal.Header closeButton>

@@ -21,7 +21,7 @@ import StretcherList from "./Pages/Stretcher/List";
 import StretcherDetail from "./Pages/Stretcher/Detail";
 
 function App() {
-  // Interval Clear 시 사용하려고 선언
+  // Interval Clear 시 사용하려고 선언'
   const [tokenInterval, setTokenInterval] = useState(null);
 
   const [hide, setHide] = useState(true);
@@ -86,6 +86,26 @@ function App() {
   //로그인 페이지 처음 접근시 RememberYn 이 Y 인지 체크
   useEffect(() => {
     checkedTokenAndRememberMe();
+    console.log(location.pathname);
+    let delay = true;
+    const M = window.M;
+    M.onBack(() => {
+      const location = window.location;
+      const pathname = location.hash.substring(1).split("?")[0] || "";
+      if (["/", "/login", "/stretcher/list"].includes(pathname)) {
+        if (delay) {
+          delay = false;
+          M.pop.instance("한번 더 누르면 앱이 종료됩니다.");
+          setTimeout(() => {
+            delay = true;
+          }, 500);
+          return;
+        }
+        M.sys.exit();
+      } else {
+        navigate(-1);
+      }
+    });
   }, []);
   return (
     <TitleStore>

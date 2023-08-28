@@ -769,12 +769,12 @@ function ReactTable({
                               {...cell.getCellProps()}
                             >
                               {/*<button type="button" className={cell.value === '1'? "btn btn-exit" : "btn btn-exit-done"} onClick={row.original}>{cell.value === '1' ? '재원중' : '퇴실'}</button>*/}
-                              <button
-                                type="button"
+                              <span
                                 className={
-                                  cell.value === "1"
-                                    ? "btn btn-exit"
-                                    : "btn btn-exit-done"
+                                  // cell.value === "1"
+                                  // ? "btn btn-exit"
+                                  // : "btn btn-exit-done"
+                                  cell.value === "1" ? "text-primary" : ""
                                 }
                               >
                                 {cell.column.editElementType !== "Isolation"
@@ -787,7 +787,7 @@ function ReactTable({
                                     ? "격리중"
                                     : "격리해제"
                                   : null}
-                              </button>
+                              </span>
                             </td>
                           );
                         } else if (cell.column.editElement === "updateButton") {
@@ -902,7 +902,7 @@ function ReactTable({
                             </td>
                           );
                         } else if (cell.column.id === "btResult") {
-                        /* else if(cell.column.id === 'admissionId'){
+                          /* else if(cell.column.id === 'admissionId'){
                                                     return <td>
                                                         <input type="radio" name="check" id="3345"
                                                                defaultChecked={cell.render('Cell') && cell.render('Cell') === radioClick && radioClick }
