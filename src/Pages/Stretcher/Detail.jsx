@@ -96,7 +96,7 @@ function StretcherDetail() {
         id: "vitalChart",
         type: "line",
         toolbar: {
-          show: true,
+          show: false,
           tools: {
             download: false,
           },
